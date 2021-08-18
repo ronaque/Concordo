@@ -1,0 +1,3 @@
+C:/Users/isaqu/Documents/Escolaridade/UF/Bacharel em TI/LP1/Trabalho2/build/CMakeFiles/concordo.dir
+C:/Users/isaqu/Documents/Escolaridade/UF/Bacharel em TI/LP1/Trabalho2/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/isaqu/Documents/Escolaridade/UF/Bacharel em TI/LP1/Trabalho2/build/CMakeFiles/ZERO_CHECK.dir

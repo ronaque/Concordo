@@ -1,0 +1,68 @@
+create-user teste1@gmail.com senhalegal Teste1
+create-user teste1@gmail.com senhalegal Teste1
+create-user teste2@gmail.com senhaLegal Teste2
+create-user teste3@gmail.com senhaLegal Teste3
+login teste1@gmail.com senhalegal
+disconnect 0
+disconnect 1
+login teste1@gmail.com SENHA_ERRADA
+login teste1@gmail.com senhalegal
+create-server 0 servidor-legal
+set-server-desc 0 servidor-legal Um servidor muito banaca e coisa e tal
+create-server 0 servidor-ruim
+set-server-desc 0 servidor-ruim Um servidor lixo total
+set-server-invite-code 0 servidor-legal 123
+disconnect 0
+set-server-invite-code 0 servidor-legal 456
+login teste2@gmail.com senhaLegal
+set-server-invite-code 1 servidor-legal 789
+login teste1@gmail.com senhalegal
+set-server-invite-code 0 servidor-legal 321
+set-server-invite-code 0 servidor-legal
+set-server-invite-code 0 servidor-inexistente 123
+set-server-invite-code 0 servidor-inexistente
+disconnect 0
+list-servers 0 
+login teste1@gmail.com senhalegal
+list-servers 0 
+remove-server 0 servidor-inexistente
+remove-server 0 servidor-legal
+list-servers 0 
+disconnect 0
+remove-server 0 servidor-ruim
+login teste1@gmail.com senhalegal
+remove-server 0 servidor-ruim
+create-server 0 servidor-bacana
+create-server 0 servidor-fuderoso
+list-servers 0
+enter-server 0 servidor-bacana
+leave-server 0 servidor-bacana
+list-servers 0
+login teste1@gmail.com senhalegal
+remove-server 0 servidor-bacana
+enter-server 0 servidor-bacana
+list-participants 0
+login teste2@gmail.com senhaLegal
+create-server 1 servidor-sinistro
+enter-server 1 servidor-sinistro
+login teste3@gmail.com senhaLegal
+enter-server 2 servidor-sinistro
+login teste1@gmail.com senhalegal
+enter-server 0 servidor-sinistro
+list-participants 0
+create-channel 1 canal-show
+create-channel 0 canal-show
+create-channel 0 canal-melhorainda
+list-channels 0
+enter-channel 0 canal-inexistente
+enter-channel 0 canal-show
+leave-channel 0
+enter-channel 0 canal-show
+enter-channel 1 canal-show
+enter-channel 2 canal-show
+send-message 0 eai galera
+send-message 1 eai boys
+send-message 2 opa
+list-messages 0
+quit
+create-user naodeveprocessar@gmail.com naodevechegaraqui Não deve chegar aqui
