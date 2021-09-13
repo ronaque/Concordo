@@ -19,4 +19,4 @@ cd Debug
 concordo.exe < script.txt
 
 # Limitações ou funcionalidades não implementadas
-Foi implementado todas as funções descritas no pdf do projeto.
+Foi implementado as funções de save, entretanto não foi implementado as fuções para load de arquivos.
