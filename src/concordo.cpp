@@ -2,13 +2,16 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <fstream>
 #include "sistema.h"
 #include "executor.h"
 
 using namespace std;
 
-int main() {
+int main()
+{
   // inicialização do sistema
+
   Sistema sistema;
   Executor executor(sistema);
 

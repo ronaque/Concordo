@@ -1,0 +1,3 @@
+0 servidor-sinistro canal-show
+1 servidor-sinistro canal-show
+2 servidor-sinistro canal-show

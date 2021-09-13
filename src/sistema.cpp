@@ -6,8 +6,82 @@
 
 using namespace std;
 
+/* --------------------------------- Friends ---------------------------------*/
+
+std::ofstream &operator<<(std::ofstream &os, const Servidor servidor)
+{
+  os << servidor.usuarioDonoId << " " << servidor.nome << " " << servidor.descricao << " " << servidor.codigoConvite;
+  return os;
+}
+
+std::ofstream &operator<<(std::ofstream &os, const Usuario usuario)
+{
+  os << usuario.id << " " << usuario.email << " " << usuario.senha << " " << usuario.nome << std::endl;
+  return os;
+}
+
+std::ofstream &operator<<(std::ofstream &os, const CanalTexto canaltexto)
+{
+  os << canaltexto.nome;
+  return os;
+}
+
+std::ofstream &operator<<(std::ofstream &os, const Mensagem mensagem)
+{
+  os << mensagem.enviadaPor << " " << mensagem.dataHora << " " << mensagem.conteudo;
+  return os;
+}
+
+/* --------------------------------- Funções --------------------------------- */
+
 //Criar função para saber se o usuário está logado;
 
+/* Funções de Save*/
+void Sistema::salvarusuarios(Usuario user)
+{
+  std::ofstream ofs("..\\..\\Load\\ListaUsuarios.txt", fstream::app);
+  ofs << user;
+  ofs.close();
+}
+
+void Sistema::salvarservidor(std::vector<Servidor> servidores)
+{
+  std::ofstream ofs("C:\\Users\\isaqu\\Documents\\Escolaridade\\UF\\Bacharel em TI\\LP1\\Trabalho2\\Load\\ListaServidores.txt");
+  for (int i = 0; i < servidores.size(); i++)
+  {
+    ofs << servidores[i] << std::endl;
+    for (int k = 0; k < servidores[i].canaisTexto.size(); k++)
+    {
+      ofs << servidores[i].canaisTexto[k] << std::endl;
+      for (int l = 0; l < servidores[i].canaisTexto[k].mensagens.size(); l++)
+      {
+        ofs << servidores[i].canaisTexto[k].mensagens[l] << " ";
+      }
+    }
+    for (int z = 0; z < servidores[i].participantesIDs.size(); z++)
+    {
+      ofs << servidores[i].participantesIDs[z] << " ";
+    }
+  }
+  ofs.close();
+}
+
+void Sistema::salvarusuarioslogados(std::map<int, std::pair<std::string, std::string>> usuariosLogados)
+{
+  std::string first;
+  std::string second;
+
+  std::ofstream ofs("..\\..\\Load\\ListaUsuariosLogados.txt");
+  for (int i = 0; i < usuariosLogados.size(); i++)
+  {
+    first = usuariosLogados[i].first;
+    second = usuariosLogados[i].second;
+    ofs << i << " " << first << " " << second << std::endl;
+  }
+  ofs.close();
+}
+
+/* Funções diversas*/
 bool compararUsuarios(vector<Usuario> usuarios)
 {
   if (usuarios.size() == 0)
@@ -42,7 +116,7 @@ string Sistema::retornarUsuarioPorID(int id)
   return "";
 }
 
-/* COMANDOS */
+/* --------------------------------- COMANDOS --------------------------------- */
 
 //A1
 string Sistema::quit()
@@ -61,6 +135,7 @@ string Sistema::create_user(const string email, const string senha, const string
     newuser.id = indexIdUsuarios;
     indexIdUsuarios++;
     usuarios.push_back(newuser);
+    salvarusuarios(newuser);
     return "Novo usuário criado";
   }
   else
@@ -77,6 +152,7 @@ string Sistema::create_user(const string email, const string senha, const string
     newuser.id = indexIdUsuarios;
     indexIdUsuarios++;
     usuarios.push_back(newuser);
+    salvarusuarios(newuser);
     return "Novo usuário criado";
   }
 }
@@ -94,6 +170,7 @@ string Sistema::login(const string email, const string senha)
       if (email == usuarios[i].email && senha == usuarios[i].senha)
       {
         usuariosLogados.insert(make_pair(usuarios[i].id, make_pair("", "")));
+        salvarusuarioslogados(usuariosLogados);
         return "Logado como " + email;
       }
     }
@@ -120,6 +197,7 @@ string Sistema::disconnect(int id)
       }
     }
     usuariosLogados.erase(usuariosLogados.find(id));
+    salvarusuarioslogados(usuariosLogados);
     return "Desconectando usuário " + email;
   }
 }
@@ -139,6 +217,7 @@ string Sistema::create_server(int id, const string nome)
       novoServidor.nome = nome;
       novoServidor.usuarioDonoId = id;
       servidores.push_back(novoServidor);
+      salvarservidor(servidores);
       return "Servidor criado";
     }
     else
@@ -153,6 +232,7 @@ string Sistema::create_server(int id, const string nome)
       novoServidor.nome = nome;
       novoServidor.usuarioDonoId = id;
       servidores.push_back(novoServidor);
+      salvarservidor(servidores);
       return "Servidor criado";
     }
   }
@@ -173,6 +253,7 @@ string Sistema::set_server_desc(int id, const string nome, const string descrica
         if (servidores[i].usuarioDonoId == id)
         {
           servidores[i].descricao = descricao;
+          salvarservidor(servidores);
           return "Descrição do servidor '" + nome + "' modificada!";
         }
         else
@@ -202,10 +283,12 @@ string Sistema::set_server_invite_code(int id, const string nome, const string c
           servidores[i].codigoConvite = codigo;
           if (codigo == "")
           {
+            salvarservidor(servidores);
             return "Código de convite do servidor '" + nome + "' removido";
           }
           else
           {
+            salvarservidor(servidores);
             return "Código de convite do servidor '" + nome + "' modificado";
           }
         }
@@ -271,6 +354,7 @@ string Sistema::remove_server(int id, const string nome)
                 usuariosLogados[k].second = "";
               }
             }
+            salvarservidor(servidores);
             return "Servidor '" + nome + "' removido";
           }
           //Se o id não é do dono
@@ -314,6 +398,8 @@ string Sistema::enter_server(int id, const string nome, const string codigo)
           {
             usuariosLogados[id].first = nome;
             servidores[i].participantesIDs.push_back(id);
+            salvarservidor(servidores);
+            salvarusuarioslogados(usuariosLogados);
             return "Entrou no servidor com sucesso";
           }
           //Descrição não vazia
@@ -324,6 +410,8 @@ string Sistema::enter_server(int id, const string nome, const string codigo)
             {
               servidores[i].participantesIDs.push_back(id);
               usuariosLogados[id].first = nome;
+              salvarservidor(servidores);
+              salvarusuarioslogados(usuariosLogados);
               return "Entrou no servidor com sucesso";
             }
             //Se não é o dono
@@ -334,6 +422,8 @@ string Sistema::enter_server(int id, const string nome, const string codigo)
               {
                 servidores[i].participantesIDs.push_back(id);
                 usuariosLogados[id].first = nome;
+                salvarservidor(servidores);
+                salvarusuarioslogados(usuariosLogados);
                 return "Entrou no servidor com sucesso";
               }
               //Código de convite incorreto
@@ -386,6 +476,8 @@ string Sistema::leave_server(int id, const string nome)
             servidores[i].participantesIDs.erase(servidores[i].participantesIDs.begin() + k);
             usuariosLogados[id].first = "";
             usuariosLogados[id].second = "";
+            salvarservidor(servidores);
+            salvarusuarioslogados(usuariosLogados);
             return "Saindo do servidor '" + nome + "'";
           }
           //Se o id não está conectado ao servidor
@@ -404,7 +496,7 @@ string Sistema::leave_server(int id, const string nome)
     //Caso não esteja conectado em nenhum servidor
     if (!conectado)
     {
-      return "Você não em qualquer servidor";
+      return "Você não está conectado em qualquer servidor";
     }
   }
 }
@@ -488,6 +580,7 @@ string Sistema::create_channel(int id, const string nome)
           CanalTexto novoCanalTexto;
           novoCanalTexto.nome = nome;
           servidores[i].canaisTexto.push_back(novoCanalTexto);
+          salvarservidor(servidores);
           return "Canal de texto '" + nome + "' criado";
         }
         else
@@ -502,6 +595,7 @@ string Sistema::create_channel(int id, const string nome)
           CanalTexto novoCanalTexto;
           novoCanalTexto.nome = nome;
           servidores[i].canaisTexto.push_back(novoCanalTexto);
+          salvarservidor(servidores);
           return "Canal de texto '" + nome + "' criado";
         }
       }
@@ -528,6 +622,7 @@ string Sistema::enter_channel(int id, const string nome)
           if (servidores[i].canaisTexto[k].nome == nome)
           {
             usuariosLogados[id].second = nome;
+            salvarusuarioslogados(usuariosLogados);
             return "Entrou no canal '" + nome + "'";
           }
         }
@@ -546,6 +641,7 @@ string Sistema::leave_channel(int id)
   else
   {
     usuariosLogados[id].second = "";
+    salvarusuarioslogados(usuariosLogados);
     return "Saindo do canal";
   }
 }
@@ -586,6 +682,7 @@ string Sistema::send_message(int id, const string mensagem)
               novaMensagem.dataHora = str;
 
               servidores[i].canaisTexto[k].mensagens.push_back(novaMensagem);
+              salvarservidor(servidores);
               return "";
             }
           }

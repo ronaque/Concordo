@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <fstream>
 
 #include "usuario.h"
 #include "mensagem.h"
@@ -21,7 +22,28 @@ private:
 	int indexIdUsuarios = 0;
 
 public:
+	/* ------------------------------------ Friends ------------------------------------ */
+	friend std::ofstream &operator<<(std::ofstream &os, const Servidor servidor);
+
+	friend std::ofstream &operator<<(std::ofstream &os, const Usuario usuario);
+
+	friend std::ofstream &operator<<(std::ofstream &os, const CanalTexto canaltexto);
+
+	friend std::ofstream &operator<<(std::ofstream &os, const Mensagem mensagem);
+
+	// friend std::ofstream &operator<<(std::ofstream &os, const std::map<int, std::pair<std::string, std::string>> usuariosLogados);
+
+	/* ------------------------------------ Funções ------------------------------------ */
+	void salvarusuarios(Usuario user);
+
+	void salvarservidor(std::vector<Servidor> servidores);
+
+	void salvarusuarioslogados(std::map<int, std::pair<std::string, std::string>> usuariosLogados);
+
 	std::string retornarUsuarioPorID(int id);
+
+	/* ------------------------------------ Comandos ------------------------------------*/
+
 	/*! Encerra o funcionamento do Concordo, o programa termina ao executar este comando.
 				@return uma string com a mensagem "Saindo.."
 		*/
